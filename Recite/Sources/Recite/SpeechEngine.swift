@@ -149,6 +149,7 @@ class SpeechEngine: NSObject, ObservableObject {
             model = nil
             loadedSpeechModelID = nil
             modelStatus = .notLoaded
+            Memory.clearCache()
             Task { await self.loadModel() }
         }
     }
@@ -200,9 +201,12 @@ class SpeechEngine: NSObject, ObservableObject {
     static let lowWaterWallSeconds = 2.5
     static let selectedSpeechModelKey = "selectedSpeechModelID"
     static let legacySelectedVoiceKey = "selectedVoice"
+    // MLX keeps freed GPU buffers for reuse, and by default may hold as much as the memory limit.
+    static let mlxCacheLimitBytes = 256 * 1024 * 1024
 
     override init() {
         super.init()
+        Memory.cacheLimit = Self.mlxCacheLimitBytes
     }
 
     static func voicePresets(for modelFamily: VoiceModelFamily) -> [VoicePreset] {
