@@ -144,6 +144,7 @@ extension SpeechEngine {
         state = .idle
         currentText = ""
         stopAudioEngine()
+        Memory.clearCache()
         ReadingQueue.shared.didFinishCurrent()
     }
 
@@ -182,6 +183,7 @@ extension SpeechEngine {
         generationID &+= 1
         generationTask?.cancel()
         stopAudioEngine()
+        Memory.clearCache()
         state = .idle
         currentText = ""
         progress = 0
